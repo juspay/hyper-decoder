@@ -1,0 +1,19 @@
+{
+  "name": "ps",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile": "spago build"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "purescript": "^0.15.7",
+    "purs-backend-es": "^1.3.1"
+  }
+}
