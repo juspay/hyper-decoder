@@ -7,21 +7,14 @@ module Main where
 import Prelude
 
 import Data.Show (class Show)
-import Data.Array (tail, (:))
 import Foreign (Foreign)
-import LiteDecode.Decode
-import Main.DecodeError
+import DecodedVal
 import Effect.Console (log)
-import Data.Newtype (wrap)
-import Data.Maybe (Maybe)
 import Data.Unit (unit)
 import Data.Generic.Rep
 import Foreign.Generic.Class (decode, class Decode)
-import Control.Monad.Except (runExcept)
-import Data.Either (Either(..))
 import Types (BigType)
-import Type.Proxy (Proxy)
-import Chain (decodeForeign, decodeString)
+import HyperDecode
  
 foreign import movieData :: Unit -> Foreign
 foreign import startProfile :: Unit -> Unit
@@ -48,4 +41,4 @@ val =
         DecodeErr x -> x
         Val (x :: Array BigType) -> show x
 
-main = log $ "" --val
+main = log $ val
