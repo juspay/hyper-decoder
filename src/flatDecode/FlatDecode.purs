@@ -16,8 +16,6 @@ import Unsafe.Coerce
 
 foreign import lookupVal :: Foreign -> String -> Foreign
 
-foreign import unsafeInsertImpl :: forall a r1 r2. String -> a -> Record r1 -> Record r2
-
 foreign import tryCatch :: forall a b. Foreign -> (Foreign -> a) -> (a -> b) -> (String -> b) -> b
 
 class HyperDecode a where
