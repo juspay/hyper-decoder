@@ -9,7 +9,7 @@ export function movieData(){
     for(var i=0 ;i<10; i++){
         x.push({cast : ["asdf", "123"], title : "afg", year: 2020, rating: 7.3, reviews : {count: 10}})
     }
-    x.push({cast : ["asdf", "123"], title : "afg", year: 2023, rating: 7.3, reviews : {count: 10}})
+    x.push({cast : ["asdf", null], title : "afg", year: 2023, rating: 7.3, reviews : {count: 10}})
     return x;
 }
 

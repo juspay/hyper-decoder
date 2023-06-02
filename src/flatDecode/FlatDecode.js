@@ -4,15 +4,6 @@ export function lookupVal(fn){
     }
 }
 
-export function unsafeInsertImpl(key){
-    return (val)=>{
-        return (rec)=>{
-            rec[key] = val
-            return rec
-        }
-    }
-}
-
 export const primitiveDecodeImpl = function (_type) {
     return (obj) => {
         return (success) => {
@@ -51,7 +42,7 @@ export function maybeDecodeImpl(obj){
     return (failure)=>{
         return (nothing) => {
             return (decodeFn)=> {
-                    if (typeof obj === 'undefined') {
+                    if (obj === undefined || obj === null) {
                         return nothing
                     }
                     return decodeFn(obj)
@@ -89,14 +80,6 @@ export function tryWithString(str){
             }
         }
     }
-}
-
-export function storeSomewhere(a){
-    // if(!window.tailTrace){
-    //     window.tailTrace = []
-    // }
-    // window.tailTrace.push(a)
-    return a
 }
 
 export const mkDecodeEntry = function (k){
