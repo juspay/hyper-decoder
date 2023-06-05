@@ -4,48 +4,24 @@ export function lookupVal(fn){
     }
 }
 
-export const primitiveDecodeImpl = function (_type) {
-    return (obj) => {
-        return (success) => {
-            return (failure) => {
-                if (typeof obj === _type) {
-                    return success(obj)
-                } else {
-                    return failure(`type mismatch: expected "${_type}", found "${typeof obj}"`)
-                }
-            }
-        }
-    }
-}
+export const getType = (obj) => typeof obj
 
-export function arrDecodeImpl(obj){
+export const isNullOrUndefined = (obj) => obj === undefined || obj === null
+
+export const isArray = (obj) => Array.isArray(obj)
+
+export function arrDecodeImpl(arr){
     return (decodeFn)=>{
         return (success)=>{
             return (failure)=>{
+                // exception handling needed as we are deliberately passing a error throwing failure function in decodeFn
                 try {
                     const arrToRet = [];
-                    if(Array.isArray(obj)){
-                        obj.forEach(curr=>arrToRet.push(decodeFn(curr)))
-                        return success(arrToRet);
-                    } else{
-                        return failure("type is not array")
-                    }
+                    arr.forEach(curr => arrToRet.push(decodeFn(curr)))
+                    return success(arrToRet);
                 } catch (e) {
                     return failure(e.message)
                 }
-            }
-        }
-    }
-}
-
-export function maybeDecodeImpl(obj){
-    return (failure)=>{
-        return (nothing) => {
-            return (decodeFn)=> {
-                    if (obj === undefined || obj === null) {
-                        return nothing
-                    }
-                    return decodeFn(obj)
             }
         }
     }
@@ -84,7 +60,6 @@ export function tryWithString(str){
 
 export const mkDecodeEntry = function (k){
     return (fn)=>{
-        // console.log(k)
         return [k, fn]
     }
 }
@@ -114,27 +89,14 @@ export function constructFromIterativeForm(rows){
     }
 }
 
-export function constructNewTypeFromIterativeForm(rows){
-    return (dataConstructor)=> {
-        return (obj) => {
-            return (success) => {
-                return (failure) => {
-                    return constructData(rows, obj, (x)=>success(dataConstructor(x)), failure)
-                }
-            }
-        }
-    }
-}
-
 export function arrayPush(arr){
     return (a)=>{
         try{
-            // console.log(arr, a)
             arr.push(a)
             return arr
         }
         catch (e) {
-            // console.log("is not array", e.toString())
+            console.error("error while inserting into array " + e.message)
             return arr;
         }
     }
