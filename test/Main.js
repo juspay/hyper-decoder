@@ -6,13 +6,13 @@ export function stringify(fn){
 
 var input1 = {
     "id": 1,
-    "title": "Movie 1=2",
+    "title": "Movie 1",
     "rating": 4.5,
     "year": 2022,
-    "cast": ["Actor 1", "Actor 2", "Actor 3"],
+    "cast": ["Actor 1", "Actor 2", 3],
     "reviews": {
       "count": 10,
-      "reviewers": ["Reviewer 1", "Reviewer 2", "Reviewer 3"]
+      "reviewers": [{name : "Reviewer 1", id: "asdf"}, {name : "Reviewer 2"},{name : "Reviewer 3"}]
     }
   };
   

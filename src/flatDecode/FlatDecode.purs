@@ -26,7 +26,7 @@ foreign import tryCatch :: forall a b. Foreign -> (Foreign -> a) -> (a -> b) -> 
 -- |
 -- | While there are other good libraries like foreign-generic or purescript-argonaut which can get the job done, major problem `HyperDecode` addressing is decode speed.
 -- |
--- | `HyperDecode` took the librety of stripping off configurability of decode on record types.
+-- | `HyperDecode` took the liberty of stripping off configurability of decode on record types.
 -- | So to successfully decode a record, foreign object keys must be same as record keys.
 class HyperDecode a where
     hyperDecode :: forall b. Foreign -> (a -> b) -> (String -> b) -> b
@@ -74,8 +74,8 @@ instance arrDecode :: (HyperDecode a) => HyperDecode (Array a) where
     hyperDecode obj success failure = 
         if isArray obj
             -- | array will be decoded by traversing the foreign object
-            -- | any decode fail in the object will call shortCircut, which will throw error
-            -- | this error will be catched and failure function will be called
+            -- | any decode fail in the object will call shortCircuit, which will throw error
+            -- | this error will be caught and failure function will be called
             then arrDecodeImpl obj (\x -> hyperDecode x (\y -> y) shortCircuit) success failure
             else failure "value is not an array"
 
@@ -89,7 +89,7 @@ instance maybeDecode :: (HyperDecode a) => HyperDecode (Maybe a) where
 
 -- | `HyperDecode` instance for record type
 -- |
--- | `RowToList` is the only type class to relay on to create any instance on Record when we need to acess record keys and respective types (which are values in runtime).
+-- | `RowToList` is the only type class to relay on to create any instance on Record when we need to access record keys and respective types (which are values in runtime).
 -- | Cons data type used to extract type information of a record is not flat, it's kind of a linked list in nature where each node will act as a linked list from rest of the data.
 -- | Traversing this everytime when decoding a record will leads to implement a recursion. which can create some deep callStack for records of large size.
 -- | To tackle this, we are creating an array representation of the Cons data and using that array representation for decoding.
