@@ -13,32 +13,62 @@ import Effect.Console (log)
 import Data.Unit (unit)
 import Data.Generic.Rep
 import Foreign.Generic.Class (decode, class Decode)
-import Types (BigType)
+import Types (BigType(..), Cast(..))
 import HyperDecode
+import Foreign.Object
+import Tests
+import Data.Maybe
+import Data.Tuple
  
 foreign import movieData :: Unit -> Foreign
 foreign import startProfile :: Unit -> Unit
 foreign import endProfile :: Unit -> Unit
 
 --getMovieData :: Either (Array Movie)
-getMovieData = let
+getMovieData _ = let
     _ = startProfile unit
---    val = decodeString "[{\"id\": 10, \"cast\":[\"asdf\",\"123\"],\"title\":\"afg\",\"year\":2020,\"rating\":7.3,\"reviews\":{\"count\":10}}]"
     val = decodeForeign (movieData unit)
     _ = endProfile unit
     in val
 
---
---val :: String
---val =
---    case runExcept getMovieData of
---        Left _ -> ""
---        Right (x :: Array BigType) -> show x
-
 val :: String
 val =
-    case getMovieData of
+    case getMovieData unit of
         DecodeErr x -> x
         Val (x :: Array BigType) -> show x
 
-main = log $ val
+foreign import getTimeLine :: Unit -> Foreign
+
+timeLine :: String
+timeLine = case decodeForeign (getTimeLine unit) :: DecodedVal (Object String) of
+    DecodeErr err -> err
+    Val       val -> show val
+
+input1 :: BigType
+input1 = BigType
+  { id: Just 1
+  , title: "Movie 1"
+  , rating: 4.5
+  , year: 2022
+  , cast: [Actor "Actor 1", Actor "Actor 2", Actor "Actor 3"]
+  , reviews: { count: 10, reviewers: Just ["Reviewer 1", "Reviewer 2", "Reviewer 3"] }
+  }
+
+input2 :: BigType
+input2 = BigType
+  { id: Nothing
+  , title: "Movie 2"
+  , rating: 3.7
+  , year: 2019
+  , cast: [Actor "Actor 4", Actor "Actor 5"]
+  , reviews: { count: 5, reviewers: Nothing }
+  }
+
+psVal = [input1, input1, input2]
+
+checkDecode :: Unit -> Tuple Boolean String
+checkDecode _ = case getMovieData unit :: DecodedVal (Array BigType) of
+    DecodeErr err -> Tuple false err
+    Val val -> Tuple (psVal == val) ""
+
+main = log $ show (checkDecode unit)
