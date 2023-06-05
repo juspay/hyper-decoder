@@ -51,7 +51,7 @@ input1 = BigType
   , rating: 4.5
   , year: 2022
   , cast: [Actor "Actor 1", Actor "Actor 2", Actor "Actor 3"]
-  , reviews: { count: 10, reviewers: Just ["Reviewer 1", "Reviewer 2", "Reviewer 3"] }
+  , reviews: { count: 10, reviewers: Just [{name : "Reviewer 1", id : Nothing}, {name : "Reviewer 2", id : Nothing}, {name : "Reviewer 3", id : Nothing}] }
   }
 
 input2 :: BigType
