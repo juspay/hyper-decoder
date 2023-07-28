@@ -32,6 +32,7 @@ instance castDecodeForeign :: Decode Cast where
 
 instance hyperDecodeCast :: HyperDecode Cast where
     hyperDecode obj success failure = success (Actor "")
+    partialDecode _ = hyperDecode
 
 instance showCast :: Show Cast where
     show c =
@@ -43,7 +44,9 @@ instance showCast :: Show Cast where
 instance eqCast :: Eq Cast where
     eq _ _ = true
 
-instance hyperDecodeBigType :: HyperDecode BigType where hyperDecode = constructorDecode BigType
+instance hyperDecodeBigType :: HyperDecode BigType where
+    hyperDecode = constructorDecode BigType
+    partialDecode = constructorPartialDecode BigType (\(BigType x) -> x)
 instance showBigType :: Show BigType where show (BigType x) = show x
 instance eqBigType :: Eq BigType where
     eq (BigType t) (BigType u) = t == u

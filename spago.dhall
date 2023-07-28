@@ -12,21 +12,24 @@ to generate this file without the comments in this block.
 -}
 { name = "my-project"
 , dependencies =
-    [ "arrays"
-    , "console"
-    , "either"
-    , "foreign"
-    , "foreign-generic"
-    , "foreign-object"
-    , "maybe"
-    , "newtype"
-    , "prelude"
-    , "transformers"
-    , "typelevel-prelude"
-    , "unsafe-coerce"
-    , "control"
-    , "tuples"
-    ]
+  [ "arrays"
+  , "console"
+  , "control"
+  , "effect"
+  , "either"
+  , "foreign"
+  , "foreign-generic"
+  , "foreign-object"
+  , "lists"
+  , "maybe"
+  , "newtype"
+  , "prelude"
+  , "quickcheck"
+  , "transformers"
+  , "tuples"
+  , "typelevel-prelude"
+  , "unsafe-coerce"
+  ]
 , packages = ./packages.dhall
 , sources = [ "src/**/*.purs", "test/**/*.purs" ]
 }

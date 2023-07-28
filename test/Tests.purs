@@ -1,10 +1,7 @@
-module Tests where
+module Test.Main where
 
 import Prelude
 import Data.Array
+import Test.QuickCheck (quickCheck)
 
-
-runTests :: Array (Unit -> Boolean) -> Boolean
-runTests = not <<< all (\x -> x unit)
-
-foreign import cmpr :: forall a. a -> a -> Boolean 
+main = quickCheck \n -> n +1 == 1 + n

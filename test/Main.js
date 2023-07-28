@@ -59,3 +59,4 @@ export function getTimeLine(){
 export const perfectInt = 123
 export const intWithDecimal = 123.0
 export const float = 123.45
+export const partialData = {reviews : { reviewers : undefined}}
