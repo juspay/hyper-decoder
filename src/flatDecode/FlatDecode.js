@@ -6,6 +6,8 @@ export function lookupVal(fn){
 
 export const getType = (obj) => typeof obj
 
+export function isInt(n){ return (n | 0) === n }
+
 export const isNullOrUndefined = (obj) => obj === undefined || obj === null
 
 export const isArray = (obj) => Array.isArray(obj)

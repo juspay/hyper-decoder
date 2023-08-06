@@ -21,8 +21,8 @@ foreign import tryCatch :: forall a b. Foreign -> (Foreign -> a) -> (a -> b) -> 
 -- | The `HyperDecode` type class represents those types that can be created (decoded) from foreign values (any JS object).
 -- | A decode function of HyperDecode takes three parameters.
 -- |  1. Foreign object to decode
--- |  2. Function to call by passing a decoded value upon successful decode 
--- |  3. Function to call by passing a `String`, which expresses why decode is failed 
+-- |  2. Function to call by passing a decoded value upon successful decode
+-- |  3. Function to call by passing a `String`, which expresses why decode is failed
 -- |
 -- | While there are other good libraries like foreign-generic or purescript-argonaut which can get the job done, major problem `HyperDecode` addressing is decode speed.
 -- |
@@ -32,6 +32,7 @@ class HyperDecode a where
     hyperDecode :: forall b. Foreign -> (a -> b) -> (String -> b) -> b
 
 foreign import getType :: forall a. a -> String
+foreign import isInt :: forall a. a -> Boolean
 
 primitiveTypeDecode :: forall a b. String -> Foreign -> (a -> b) -> (String -> b) -> b
 primitiveTypeDecode expectedType obj success failure =
@@ -45,7 +46,13 @@ instance stringDecode :: HyperDecode String where
     hyperDecode = primitiveTypeDecode "string"
 
 instance intDecode :: HyperDecode Int where
-    hyperDecode = primitiveTypeDecode "number"
+    hyperDecode obj success failure =
+        if jsType == "number"
+            then if isInt obj
+                    then success (unsafeCoerce obj)
+                    else failure "type mismatch : expected int, found number"
+            else failure ("type mismatch : expected int, found " <> jsType)
+        where jsType = getType obj
 
 instance numberDecode :: HyperDecode Number where
     hyperDecode = primitiveTypeDecode "number"
@@ -71,7 +78,7 @@ identity x = x
 foreign import isArray :: forall a. a -> Boolean
 
 instance arrDecode :: (HyperDecode a) => HyperDecode (Array a) where
-    hyperDecode obj success failure = 
+    hyperDecode obj success failure =
         if isArray obj
             -- | array will be decoded by traversing the foreign object
             -- | any decode fail in the object will call shortCircuit, which will throw error
@@ -99,7 +106,7 @@ instance hyperDecodeRecord :: (FlatRecordDecode row list, RowToList row list) =>
 
 -- | type for array representation of Cons data,
 -- | here `a` is to attach type data, this will be required to infer decodeType when passing this data to a decode function.
--- | `IterativeData a` is equivalent to `Array DecodeEntry` 
+-- | `IterativeData a` is equivalent to `Array DecodeEntry`
 data IterativeData a = Type
 
 
@@ -142,7 +149,7 @@ foreign import tryWithString :: forall a b. String -> (Foreign -> b) -> (String 
 -- | an interface to call hyperDecode function on String
 decodeString :: forall a. (HyperDecode a) => String -> DecodedVal a
 decodeString str = tryWithString str (\x -> hyperDecode x Val DecodeErr) DecodeErr
-         
+
 -- | to create a decode instance on any newtype that value have instance of `HyperDecode`
 wrapDecode :: forall a b c. (Newtype b a) => (IterativeForm a) => Foreign -> (b -> c) -> (String -> c) -> c
 wrapDecode obj success =  constructFromIterativeForm constructIterativeData obj (wrap >>> success)
