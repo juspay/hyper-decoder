@@ -15,7 +15,7 @@ var input1 = {
       "reviewers": [{name : "Reviewer 1", id: "asdf"}, {name : "Reviewer 2"},{name : "Reviewer 3"}]
     }
   };
-  
+
   var input2 = {
     "id": null,
     "title": "Movie 2",
@@ -55,3 +55,7 @@ export function getTimeLine(){
            , "completing last episode of day": "11:50 pm"
            , "started first episode of next day": "12:01 pm"}
 }
+
+export const perfectInt = 123
+export const intWithDecimal = 123.0
+export const float = 123.45
